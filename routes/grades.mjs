@@ -33,7 +33,7 @@ router.get('/:id', async (req, res) => {
   let query = { _id: new ObjectId(req.params.id) };
   let result = await collection.findOne(query);
 
-  if (!result) res.send('Not found').status(404);
+  if (!result) res.status(404).send('Not found');
   else res.send(result).status(200);
 });
 
@@ -43,7 +43,7 @@ router.get('/learner/:learnerID', async (req, res) => {
   let query = { learner_id: Number(req.params.learnerID) };
   let result = await collection.find(query).toArray();
 
-  if (!result) res.send('Not found').status(404);
+  if (!result) res.status(404).send('Not found');
   else res.send(result).status(200);
 });
 
@@ -53,7 +53,7 @@ router.delete('/learner/:learnerID', async (req, res)=>{
   let query = { learner_id: Number(req.params.learnerID) };
   let result = await collection.deleteMany(query)
 
-  if (!result) res.send('Not found').status(404);
+  if (result.deletedCount === 0) res.status(404).send('Not found');
   else res.send(result).status(200);
 })
 
@@ -64,7 +64,7 @@ router.get('/class/:classID', async (req, res) => {
   let query = { class_id: Number(req.params.classID) };
   let result = await collection.find(query).toArray();
 
-  if (!result) res.send('Not found').status(404);
+  if (!result) res.status(404).send('Not found');
   else res.json(result).status(200);
 });
 
@@ -77,7 +77,8 @@ router.patch('/class/:classID', async (req, res) => {
     $set: { class_id: req.body.class_id },
   });
 
-  if (!result) res.send('Not found').status(404);
+  console.log(result)
+  if (result.upsertedCount === 0 ) res.status(404).send('Not found');
   else res.json(result).status(200);
 });
 
